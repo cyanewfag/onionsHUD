@@ -125,17 +125,29 @@ function drawHUDBar()
 	local hudPosition = onion_hud_position:GetValue()
 	local hudStyle = onion_hud_style:GetValue()
 	local x, y = 0, 0
-
+	local r, g, b, a = onion_hud_color_text:GetValue()
+	
+	draw.Color(r, g, b, a)
+	draw.SetFont(textFont)
+	local textW, textH = draw.GetTextSize("cat dog")
 	
 	-- Set HUD Position
 	if (hudPosition == 0) then
+		if (onion_hud_position_dynamic:GetValue() == true) then
+			if (onion_gradient_enabled:GetValue() == true) then
+				y = y + onion_gradient_height:GetValue()
+			end
+		end
 		
+		y = y + onion_hud_position_y:GetValue()
 	elseif (hudPosition == 1) then
+		if (onion_hud_position_dynamic:GetValue() == true) then
+			if (onion_gradient_enabled:GetValue() == true) then
+				y = y + onion_gradient_height:GetValue()
+			end
+		end	
 		
-	elseif (hudPosition == 2) then
-		
-	else
-		
+		y = y + onion_hud_position_y:GetValue()
 	end
 	
 	
@@ -162,7 +174,7 @@ function gatherVariables()
 	mouseX, mouseY = input.GetMousePos()
 end
 
-function drawMenu()
+function drawHUD()
 	if (onion_gradient_enabled:GetValue() == true) then
 		local a, b, c, d = onion_gradient_col_1:GetValue()
 		local e, f, g, h = onion_gradient_col_2:GetValue()
@@ -180,4 +192,4 @@ end
 --
 
 callbacks.Register('Draw', gatherVariables);
-callbacks.Register('Draw', drawMenu);
+callbacks.Register('Draw', drawHUD);
