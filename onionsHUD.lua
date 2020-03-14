@@ -59,7 +59,6 @@ local playerResources
 local curTime
 local map
 local tick
-local vX, vY = 0, 0
 
 --
 -- Misc Functions
@@ -205,6 +204,8 @@ function gatherVariables()
 		else
 			server = "localhost"
 		end
+		
+		local vX, vY = 0, 0
 	
 		if (localplayer ~= nil) then
 		    ping = playerResources:GetPropInt("m_iPing", localPlayer:GetIndex()) .. ' ms'
@@ -212,9 +213,10 @@ function gatherVariables()
 			username = client.GetPlayerNameByIndex(client.GetLocalPlayerIndex())
 			maxVelocity = client.GetConVar("sv_maxvelocity")
 			vX, vY = getPropFloat(localPlayer, 'm_vecVelocity[0]'), getPropFloat(localPlayer, 'm_vecVelocity[1]')
+			curVelocity = math.floor(math.min(10000, math.sqrt(vX * vX + vY * vY) + 0.5))
 		else
 			maxVelocity = 1
-			vX, vY = 0, 0
+			curVelocity = 0
 		end
 	end
 end
