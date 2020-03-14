@@ -33,6 +33,15 @@ local onion_hud_color_backcolor = gui.ColorPicker(onion_window_groupbox_2,'onion
 local onion_hud_color_bordercolor = gui.ColorPicker(onion_window_groupbox_2,'onion_hud_color_bordercolor', 'HUD Border Color', 0, 183, 255, 255)
 local onion_hud_color_text = gui.ColorPicker(onion_window_groupbox_2,'onion_hud_color_text', 'HUD Text Color', 255, 255, 255, 255)
 
+-- Options
+local onion_window_groupbox_3 = gui.Groupbox(onion_window_groupbox_2, 'HUD Options', 0, 415)
+local onion_hud_options_time = gui.Checkbox(onion_window_groupbox_3, 'onion_hud_options_time', 'Time', true)
+local onion_hud_options_username = gui.Checkbox(onion_window_groupbox_3, 'onion_hud_options_username', 'Username', true)
+local onion_hud_options_ping = gui.Checkbox(onion_window_groupbox_3, 'onion_hud_options_ping', 'Ping', true)
+local onion_hud_options_server = gui.Checkbox(onion_window_groupbox_3, 'onion_hud_options_server', 'Server', true)
+local onion_hud_options_velocity = gui.Checkbox(onion_window_groupbox_3, 'onion_hud_options_velocity', 'Velocity', true)
+local onion_hud_options_tickrate = gui.Checkbox(onion_window_groupbox_3, 'onion_hud_options_tickrate', 'Tickrate', true)
+
 -- Fonts
 local textFont = draw.CreateFont( "Tahoma", 16 )
 
@@ -48,6 +57,9 @@ local maxVelocity
 local curVelocity
 local playerResources
 local curTime
+local map
+local tick
+local vX, vY = 0, 0
 
 --
 -- Misc Functions
@@ -183,9 +195,27 @@ function gatherVariables()
 	mouseX, mouseY = input.GetMousePos()
 	localPlayer = entities.GetLocalPlayer()
 	playerResources = entities.GetPlayerResources()
+	-- curTime = os.date("%X")
 	
 	if (onion_hud_enabled:GetValue() == true) then
+		map = engine.GetMapName()
 		
+		if (engine.GetServerIP() ~= "loopback") then
+			server = engine.GetServerIP()
+		else
+			server = "localhost"
+		end
+	
+		if (localplayer ~= nil) then
+		    ping = playerResources:GetPropInt("m_iPing", localPlayer:GetIndex()) .. ' ms'
+            tick = math.floor(localPlayer:GetProp("localdata", "m_nTickBase") + 0x20) * 2 .. ' tick'
+			username = client.GetPlayerNameByIndex(client.GetLocalPlayerIndex())
+			maxVelocity = client.GetConVar("sv_maxvelocity")
+			vX, vY = getPropFloat(localPlayer, 'm_vecVelocity[0]'), getPropFloat(localPlayer, 'm_vecVelocity[1]')
+		else
+			maxVelocity = 1
+			vX, vY = 0, 0
+		end
 	end
 end
 
