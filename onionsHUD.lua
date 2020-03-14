@@ -35,7 +35,6 @@ local onion_hud_color_text = gui.ColorPicker(onion_window_groupbox_2,'onion_hud_
 
 -- Options
 local onion_window_groupbox_3 = gui.Groupbox(onion_window_groupbox_2, 'HUD Options', 0, 415)
-local onion_hud_options_time = gui.Checkbox(onion_window_groupbox_3, 'onion_hud_options_time', 'Time', true)
 local onion_hud_options_username = gui.Checkbox(onion_window_groupbox_3, 'onion_hud_options_username', 'Username', true)
 local onion_hud_options_ping = gui.Checkbox(onion_window_groupbox_3, 'onion_hud_options_ping', 'Ping', true)
 local onion_hud_options_server = gui.Checkbox(onion_window_groupbox_3, 'onion_hud_options_server', 'Server', true)
@@ -43,7 +42,7 @@ local onion_hud_options_velocity = gui.Checkbox(onion_window_groupbox_3, 'onion_
 local onion_hud_options_tickrate = gui.Checkbox(onion_window_groupbox_3, 'onion_hud_options_tickrate', 'Tickrate', true)
 
 -- Fonts
-local textFont = draw.CreateFont( "Tahoma", 16 )
+local textFont = draw.CreateFont( "Tahoma", 18 )
 
 -- Misc Variables
 local scrW, scrH = 0, 0
@@ -72,6 +71,14 @@ local function has_value (tab, val)
     end
 
     return false
+end
+
+local function getPropFloat(lp, wat)
+    return lp:GetPropFloat("localdata", wat)
+end
+
+local function getPropInt(lp, wat)
+    return lp:GetPropInt("localdata", wat)
 end
 
 --
@@ -146,30 +153,33 @@ function drawHUDBar()
 	local hudStyle = onion_hud_style:GetValue()
 	local x, y = 0, 0
 	local r, g, b, a = onion_hud_color_text:GetValue()
+	local backR, backG, backB, backA = onion_hud_color_backcolor:GetValue()
+	local borderR, borderG, borderB, borderA = onion_hud_color_bordercolor:GetValue()
 	local hudString = ""
+	local hudText = " | "
 	
 	--if (onion_hud_options_time:GetValue() == true) then
 		
 	--end
 	
 	if (onion_hud_options_username:GetValue() == true) then
-		hudString = hudString .. username
+		if (username ~= "") then hudString = hudString .. username .. hudText end
 	end
 	
 	if (onion_hud_options_ping:GetValue() == true) then
-		hudString = hudString .. ping
+		if (ping ~= "") then hudString = hudString .. ping .. hudText end
 	end
 	
 	if (onion_hud_options_server:GetValue() == true) then
-		hudString = hudString .. server
+		if (server ~= "") then hudString = hudString .. server .. hudText end
 	end
 	
 	if (onion_hud_options_velocity:GetValue() == true) then
-		hudString = hudString .. curVelocity
+		if (curVelocity ~= 0) then hudString = hudString .. curVelocity .. " m/s" .. hudText end
 	end
 	
 	if (onion_hud_options_tickrate:GetValue() == true) then
-		hudString = hudString .. tick
+		if (tick ~= "") then hudString = hudString .. tick .. hudText end
 	end
 	
 	hudString = hudString .. curTime
@@ -188,6 +198,7 @@ function drawHUDBar()
 		end
 		
 		y = y + onion_hud_position_y:GetValue()
+		x = scrW - (onion_hud_position_x:GetValue() + hudW)
 	elseif (hudPosition == 1) then
 		if (onion_hud_position_dynamic:GetValue() == true) then
 			if (onion_gradient_enabled:GetValue() == true) then
@@ -196,12 +207,21 @@ function drawHUDBar()
 		end	
 		
 		y = y + onion_hud_position_y:GetValue()
+		x = onion_hud_position_x:GetValue()
+	elseif (hudPosition == 3) then
+		y = ((scrH - hudH) - onion_hud_position_y:GetValue())
+		x = onion_hud_position_x:GetValue()
+	else
+		y = ((scrH - hudH) - onion_hud_position_y:GetValue())
+		x = scrW - (onion_hud_position_x:GetValue() + hudW)
 	end
 	
 	
 	-- Draw the HUD
 	if (hudStyle == 0) then
-		
+		drawFilledRect(borderR, borderG, borderB, borderA, x, y, hudW, 2)
+		drawFilledRect(backR, backG, backB, backA, x, y + 2, hudW, hudH - 2)
+		drawCenteredText(r, g, b, a, x + (hudW / 2), (y + 1) + ((hudH - 2) / 2), textFont, hudString)
 	elseif (hudStyle == 1) then
 		
 	else
@@ -225,21 +245,23 @@ function gatherVariables()
 	-- curTime = os.clock()
 	
 	if (onion_hud_enabled:GetValue() == true) then
-		if (localplayer ~= nil) then
+		if (localPlayer ~= nil) then
 			local vX, vY = 0, 0
 		
 		    ping = playerResources:GetPropInt("m_iPing", localPlayer:GetIndex()) .. ' ms'
-            tick = math.floor(localPlayer:GetProp("localdata", "m_nTickBase") + 0x20) * 2 .. ' tick'
+            tick = client.GetConVar("sv_maxcmdrate") .. ' tick'
 			username = client.GetPlayerNameByIndex(client.GetLocalPlayerIndex())
 			maxVelocity = client.GetConVar("sv_maxvelocity")
 			vX, vY = getPropFloat(localPlayer, 'm_vecVelocity[0]'), getPropFloat(localPlayer, 'm_vecVelocity[1]')
 			curVelocity = math.floor(math.min(10000, math.sqrt(vX * vX + vY * vY) + 0.5))
 			
 			map = engine.GetMapName()
-			if (engine.GetServerIP() ~= "loopback") then
-				server = engine.GetServerIP()
-			else
+			if (engine.GetServerIP() == "loopback") then
 				server = "localhost"
+			elseif string.find(engine.GetServerIP(), "A") then
+				server = "valve"
+			else
+				server = engine.GetServerIP()
 			end
 		else
 			maxVelocity = 1
