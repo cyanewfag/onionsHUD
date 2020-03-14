@@ -225,26 +225,30 @@ function gatherVariables()
 	-- curTime = os.clock()
 	
 	if (onion_hud_enabled:GetValue() == true) then
-		map = engine.GetMapName()
-		
-		if (engine.GetServerIP() ~= "loopback") then
-			server = engine.GetServerIP()
-		else
-			server = "localhost"
-		end
-		
-		local vX, vY = 0, 0
-	
 		if (localplayer ~= nil) then
+			local vX, vY = 0, 0
+		
 		    ping = playerResources:GetPropInt("m_iPing", localPlayer:GetIndex()) .. ' ms'
             tick = math.floor(localPlayer:GetProp("localdata", "m_nTickBase") + 0x20) * 2 .. ' tick'
 			username = client.GetPlayerNameByIndex(client.GetLocalPlayerIndex())
 			maxVelocity = client.GetConVar("sv_maxvelocity")
 			vX, vY = getPropFloat(localPlayer, 'm_vecVelocity[0]'), getPropFloat(localPlayer, 'm_vecVelocity[1]')
 			curVelocity = math.floor(math.min(10000, math.sqrt(vX * vX + vY * vY) + 0.5))
+			
+			map = engine.GetMapName()
+			if (engine.GetServerIP() ~= "loopback") then
+				server = engine.GetServerIP()
+			else
+				server = "localhost"
+			end
 		else
 			maxVelocity = 1
 			curVelocity = 0
+			username = ""
+			tick = ""
+			ping = ""
+			server = ""
+			map = ""
 		end
 	end
 end
