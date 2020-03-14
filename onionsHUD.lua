@@ -56,7 +56,7 @@ local server = ""
 local maxVelocity
 local curVelocity
 local playerResources
-local curTime = 12:00
+local curTime = "12:00"
 local map
 local tick
 
