@@ -56,7 +56,7 @@ local server = ""
 local maxVelocity
 local curVelocity
 local playerResources
-local curTime
+local curTime = 12:00
 local map
 local tick
 
@@ -146,10 +146,38 @@ function drawHUDBar()
 	local hudStyle = onion_hud_style:GetValue()
 	local x, y = 0, 0
 	local r, g, b, a = onion_hud_color_text:GetValue()
+	local hudString = ""
+	
+	--if (onion_hud_options_time:GetValue() == true) then
+		
+	--end
+	
+	if (onion_hud_options_username:GetValue() == true) then
+		hudString = hudString .. username
+	end
+	
+	if (onion_hud_options_ping:GetValue() == true) then
+		hudString = hudString .. ping
+	end
+	
+	if (onion_hud_options_server:GetValue() == true) then
+		hudString = hudString .. server
+	end
+	
+	if (onion_hud_options_velocity:GetValue() == true) then
+		hudString = hudString .. curVelocity
+	end
+	
+	if (onion_hud_options_tickrate:GetValue() == true) then
+		hudString = hudString .. tick
+	end
+	
+	hudString = hudString .. curTime
 	
 	draw.Color(r, g, b, a)
 	draw.SetFont(textFont)
-	local textW, textH = draw.GetTextSize("cat dog")
+	local textW, textH = draw.GetTextSize(hudString)
+	local hudW, hudH = textW + 20, textH + 10
 	
 	-- Set HUD Position
 	if (hudPosition == 0) then
@@ -194,7 +222,7 @@ function gatherVariables()
 	mouseX, mouseY = input.GetMousePos()
 	localPlayer = entities.GetLocalPlayer()
 	playerResources = entities.GetPlayerResources()
-	-- curTime = os.date("%X")
+	-- curTime = os.clock()
 	
 	if (onion_hud_enabled:GetValue() == true) then
 		map = engine.GetMapName()
