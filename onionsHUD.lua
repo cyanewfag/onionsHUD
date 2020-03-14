@@ -12,6 +12,7 @@ local onion_window_groupbox_2 = gui.Groupbox(onion_window, 'HUD Settings', 15, 2
 -- Checkboxes
 local onion_gradient_enabled = gui.Checkbox(onion_window_groupbox_1, 'onion_gradient_enabled', 'Enabled', true)
 local onion_gradient_vertical = gui.Checkbox(onion_window_groupbox_1, 'onion_gradient_vertical', 'Vertical Gradient (Clowns Only)', false)
+local onion_hud_enabled = gui.Checkbox(onion_window_groupbox_2, 'onion_hud_enabled', 'Enabled', true)
 local onion_hud_position_dynamic = gui.Checkbox(onion_window_groupbox_2, 'onion_hud_position_dynamic', 'Dynamic HUD Position', true)
 local onion_hud_position_drag = gui.Checkbox(onion_window_groupbox_2, 'onion_hud_position_drag', 'Draggable HUD (W.I.P)', false)
 
@@ -39,6 +40,14 @@ local textFont = draw.CreateFont( "Tahoma", 16 )
 local scrW, scrH = 0, 0
 local initialize = false
 local mouseX, mouseY = 0, 0
+local localplayer
+local username = ""
+local ping = ""
+local server = ""
+local maxVelocity
+local curVelocity
+local playerResources
+local curTime
 
 --
 -- Misc Functions
@@ -172,6 +181,12 @@ function gatherVariables()
 	end
 	
 	mouseX, mouseY = input.GetMousePos()
+	localPlayer = entities.GetLocalPlayer()
+	playerResources = entities.GetPlayerResources()
+	
+	if (onion_hud_enabled:GetValue() == true) then
+		
+	end
 end
 
 function drawHUD()
@@ -184,7 +199,9 @@ function drawHUD()
 		drawGradient( { e, f, g, h }, { i, j, k, l }, draw.GetScreenSize() / 2,  0 , draw.GetScreenSize() / 2 , onion_gradient_height:GetValue(), onion_gradient_vertical:GetValue());
 	end
 	
-	drawHUDBar()
+	if (onion_hud_enabled:GetValue() == true) then
+		drawHUDBar()
+	end
 end
 
 --
