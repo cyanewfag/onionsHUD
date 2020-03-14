@@ -42,7 +42,7 @@ local onion_hud_options_velocity = gui.Checkbox(onion_window_groupbox_3, 'onion_
 local onion_hud_options_tickrate = gui.Checkbox(onion_window_groupbox_3, 'onion_hud_options_tickrate', 'Tickrate', true)
 
 -- Fonts
-local textFont = draw.CreateFont( "Tahoma", 18 )
+local textFont = draw.CreateFont( "Tahoma", 16 )
 
 -- Misc Variables
 local scrW, scrH = 0, 0
@@ -187,7 +187,15 @@ function drawHUDBar()
 	draw.Color(r, g, b, a)
 	draw.SetFont(textFont)
 	local textW, textH = draw.GetTextSize(hudString)
-	local hudW, hudH = textW + 20, textH + 10
+	local hudW, hudH = 0, 0
+	
+	if (hudStyle == 0) then
+		hudW, hudH = textW + 20, textH + 10
+	elseif (hudStyle == 1) then
+		hudW, hudH = textW + 20, textH + 18
+	else
+		
+	end
 	
 	-- Set HUD Position
 	if (hudPosition == 0) then
@@ -223,7 +231,12 @@ function drawHUDBar()
 		drawFilledRect(backR, backG, backB, backA, x, y + 2, hudW, hudH - 2)
 		drawCenteredText(r, g, b, a, x + (hudW / 2), (y + 1) + ((hudH - 2) / 2), textFont, hudString)
 	elseif (hudStyle == 1) then
-		
+		drawFilledRect(10, 10, 10, 255, x, y, hudW, hudH)
+		drawFilledRect(60, 60, 60, 255, x + 1, y + 1, hudW - 2, hudH - 2)
+		drawFilledRect(40, 40, 40, 255, x + 2, y + 2, hudW - 4, hudH - 4)
+		drawFilledRect(10, 10, 10, 255, x + 5, y + 5, hudW - 10, hudH - 10)
+		drawFilledRect(17, 17, 17, 255, x + 6, y + 6, hudW - 12, hudH - 12)
+		drawCenteredText(r, g, b, a, x + (hudW / 2), (y + (hudH / 2)) - 1, textFont, hudString)
 	else
 		
 	end
