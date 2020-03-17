@@ -31,10 +31,11 @@ local onion_gradient_col_2 = gui.ColorPicker(onion_window_groupbox_1,'onion_grad
 local onion_gradient_col_3 = gui.ColorPicker(onion_window_groupbox_1,'onion_gradient_col_3', 'Gradient Color 3', 201, 227, 58, 255)
 local onion_hud_color_backcolor = gui.ColorPicker(onion_window_groupbox_2,'onion_hud_color_backcolor', 'HUD Backcolor', 43, 43, 43, 255)
 local onion_hud_color_bordercolor = gui.ColorPicker(onion_window_groupbox_2,'onion_hud_color_bordercolor', 'HUD Border Color', 0, 183, 255, 255)
+local onion_hud_color_bordercolor2 = gui.ColorPicker(onion_window_groupbox_2,'onion_hud_color_bordercolor2', 'HUD Border Color 2', 0, 137, 191, 255)
 local onion_hud_color_text = gui.ColorPicker(onion_window_groupbox_2,'onion_hud_color_text', 'HUD Text Color', 255, 255, 255, 255)
 
 -- Options
-local onion_window_groupbox_3 = gui.Groupbox(onion_window_groupbox_2, 'HUD Options', 0, 415)
+local onion_window_groupbox_3 = gui.Groupbox(onion_window_groupbox_2, 'HUD Options', 0, 445)
 local onion_hud_options_username = gui.Checkbox(onion_window_groupbox_3, 'onion_hud_options_username', 'Username', true)
 local onion_hud_options_ping = gui.Checkbox(onion_window_groupbox_3, 'onion_hud_options_ping', 'Ping', true)
 local onion_hud_options_server = gui.Checkbox(onion_window_groupbox_3, 'onion_hud_options_server', 'Server', true)
@@ -95,9 +96,9 @@ function drawOutlineRect(r, g, b, a, x, y, width, height)
 	draw.OutlinedRect(x, y, x + width, y + height)
 end
 
-function drawRoundedFilledRect(r, g, b, a, x, y, width, height)
+function drawRoundedFilledRect(r, g, b, a, x, y, width, height, radius)
 	draw.Color(r, g, b, a)
-	draw.RoundedRectFill(x, y, x + width, y + height)
+	draw.RoundedRectFill(x, y, x + width, y + height, radius)
 end
 
 function drawRoundedOutlineRect(r, g, b, a, x, y, width, height)
@@ -155,7 +156,8 @@ function drawHUDBar()
 	local r, g, b, a = onion_hud_color_text:GetValue()
 	local backR, backG, backB, backA = onion_hud_color_backcolor:GetValue()
 	local borderR, borderG, borderB, borderA = onion_hud_color_bordercolor:GetValue()
-	local hudString = ""
+	local border2R, border2G, border2B, border2A = onion_hud_color_bordercolor2:GetValue()
+	local hudString = "aimware | "
 	local hudText = " | "
 	
 	--if (onion_hud_options_time:GetValue() == true) then
@@ -175,14 +177,16 @@ function drawHUDBar()
 	end
 	
 	if (onion_hud_options_velocity:GetValue() == true) then
-		if (curVelocity ~= 0) then hudString = hudString .. curVelocity .. " m/s" .. hudText end
+		if (curVelocity ~= 0 and curVelocity ~= nil) then hudString = hudString .. curVelocity .. " m/s" .. hudText end
 	end
 	
 	if (onion_hud_options_tickrate:GetValue() == true) then
-		if (tick ~= "") then hudString = hudString .. tick .. hudText end
+		if (tick ~= "") then hudString = hudString .. tick
+		--.. hudText 
+		end
 	end
 	
-	hudString = hudString .. curTime
+	-- hudString = hudString .. curTime
 	
 	draw.Color(r, g, b, a)
 	draw.SetFont(textFont)
@@ -194,7 +198,7 @@ function drawHUDBar()
 	elseif (hudStyle == 1) then
 		hudW, hudH = textW + 20, textH + 18
 	else
-		
+		hudW, hudH = textW + 14, textH + 8
 	end
 	
 	-- Set HUD Position
@@ -235,10 +239,13 @@ function drawHUDBar()
 		drawFilledRect(60, 60, 60, 255, x + 1, y + 1, hudW - 2, hudH - 2)
 		drawFilledRect(40, 40, 40, 255, x + 2, y + 2, hudW - 4, hudH - 4)
 		drawFilledRect(10, 10, 10, 255, x + 5, y + 5, hudW - 10, hudH - 10)
-		drawFilledRect(17, 17, 17, 255, x + 6, y + 6, hudW - 12, hudH - 12)
+		drawRoundedFilledRect(17, 17, 17, 255, x + 6, y + 6, hudW - 12, hudH - 12)
 		drawCenteredText(r, g, b, a, x + (hudW / 2), (y + (hudH / 2)) - 1, textFont, hudString)
 	else
-		
+		drawGradient({borderR, borderG, borderB, borderA}, {border2R, border2G, border2B, border2A}, x, y, hudW / 2, 2)
+		drawGradient({border2R, border2G, border2B, border2A}, {borderR, borderG, borderB, borderA}, x + (hudW / 2), y, hudW / 2, 2)
+		drawFilledRect(10, 10, 10, 125, x, y + 2, hudW, hudH - 2)
+		drawCenteredText(r, g, b, a, x + (hudW / 2), (y + 1) + ((hudH - 2) / 2), textFont, hudString)
 	end
 end
 
