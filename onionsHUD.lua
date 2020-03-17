@@ -242,8 +242,8 @@ function drawHUDBar()
 		drawFilledRect(17, 17, 17, 255, x + 6, y + 6, hudW - 12, hudH - 12)
 		drawCenteredText(r, g, b, a, x + (hudW / 2), (y + (hudH / 2)) - 1, textFont, hudString)
 	else
-		drawGradient({borderR, borderG, borderB, borderA}, {border2R, border2G, border2B, border2A}, x, y, hudW / 2, 2)
-		drawGradient({border2R, border2G, border2B, border2A}, {borderR, borderG, borderB, borderA}, x + (hudW / 2), y, hudW / 2, 2)
+		drawGradient({border2R, border2G, border2B, border2A}, {borderR, borderG, borderB, borderA}, x, y, hudW / 2, 2)
+		drawGradient({borderR, borderG, borderB, borderA}, {border2R, border2G, border2B, border2A}, x + (hudW / 2), y, hudW / 2, 2)
 		drawFilledRect(10, 10, 10, 125, x, y + 2, hudW, hudH - 2)
 		drawCenteredText(r, g, b, a, x + (hudW / 2), (y + 1) + ((hudH - 2) / 2), textFont, hudString)
 	end
