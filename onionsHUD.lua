@@ -8,14 +8,14 @@
 --
 
 -- Window
-local onion_window = gui.Tab(gui.Reference("Settings"), 'onion_window', "Onion's HUD")
+local onion_window = gui.Tab(gui.Reference("Settings"), 'onion_window_hud', "Onion's HUD")
 
 -- Groupboxes
 local onion_window_groupbox_1 = gui.Groupbox(onion_window, 'Gradient Settings', 15, 15)
 local onion_window_groupbox_2 = gui.Groupbox(onion_window, 'HUD Settings', 15, 295)
 local onion_window_groupbox_3 = gui.Groupbox(onion_window, 'Side HUD Settings', 15, 1010)
-local onion_window_groupbox_4 = gui.Groupbox(onion_window, 'Chatbox Settings', 15, 1705)
-local onion_window_groupbox_5 = gui.Groupbox(onion_window, 'Crosshair Settings', 15, 2050)
+local onion_window_groupbox_4 = gui.Groupbox(onion_window, 'Chatbox Settings', 15, 1745)
+local onion_window_groupbox_5 = gui.Groupbox(onion_window, 'Crosshair Settings', 15, 2090)
 
 -- Checkboxes
 local onion_gradient_enabled = gui.Checkbox(onion_window_groupbox_1, 'onion_gradient_enabled', 'Enabled', true)
@@ -25,8 +25,10 @@ local onion_hud_position_dynamic = gui.Checkbox(onion_window_groupbox_2, 'onion_
 local onion_hud_enabled_ingame = gui.Checkbox(onion_window_groupbox_2, 'onion_hud_enabled_ingame', 'Ingame Check', true)
 local onion_hud_side_enabled = gui.Checkbox(onion_window_groupbox_3, 'onion_hud_side_enabled', 'Enabled', true)
 local onion_hud_side_enabled_ingame = gui.Checkbox(onion_window_groupbox_3, 'onion_hud_side_enabled_ingame', 'Ingame Check', true)
-local onion_crosshair_enabled = gui.Checkbox(onion_window_groupbox_5, 'onion_crosshair_enabled', 'Enabled', true)
-local onion_chatbox_enabled = gui.Checkbox(onion_window_groupbox_4, 'onion_chatbox_enabled', 'Enabled', true)
+local onion_hud_side_position_draggable = gui.Checkbox(onion_window_groupbox_3, 'onion_hud_side_position_draggable', 'Draggable', true)
+local onion_crosshair_enabled = gui.Checkbox(onion_window_groupbox_5, 'onion_crosshair_enabled', 'Enabled', false)
+local onion_crosshair_enabled_velocity = gui.Checkbox(onion_window_groupbox_5, 'onion_crosshair_enabled_velocity', 'Disable on Velocity', false)
+local onion_chatbox_enabled = gui.Checkbox(onion_window_groupbox_4, 'onion_chatbox_enabled', 'Enabled', false)
 
 -- Sliders
 local onion_gradient_height = gui.Slider(onion_window_groupbox_1, 'onion_gradient_height', 'Gradient Height', 5, 1, 20)
@@ -35,16 +37,17 @@ local onion_hud_position_y = gui.Slider(onion_window_groupbox_2, 'onion_hud_posi
 local onion_hud_side_position_y = gui.Slider(onion_window_groupbox_3, 'onion_hud_side_position_y', 'Y Offset', 0, -200, 200)
 local onion_hud_side_position_x = gui.Slider(onion_window_groupbox_3, 'onion_hud_side_position_x', 'X Offset', 15, 0, 75)
 local onion_hud_side_distance_y = gui.Slider(onion_window_groupbox_3, 'onion_hud_side_distance_y', 'Vertical Distance', 10, 0, 50)
+local onion_crosshair_enabled_velocity_max = gui.Slider(onion_window_groupbox_5, 'onion_crosshair_enabled_velocity_max', 'Max Velocity', 200, 0, 1000)
 local onion_crosshair_line_width = gui.Slider(onion_window_groupbox_5, 'onion_crosshair_line_width', 'Line Width', 2, 1, 20)
 local onion_crosshair_size = gui.Slider(onion_window_groupbox_5, 'onion_crosshair_size', 'Crosshair Size', 12, 2, 100, 2)
 local onion_chatbox_position_y = gui.Slider(onion_window_groupbox_4, 'onion_chatbox_position_y', 'Y Offset', 15, 0, 400, 5)
 local onion_chatbox_position_x = gui.Slider(onion_window_groupbox_4, 'onion_chatbox_position_x', 'X Offset', 15, 0, 400, 5)
 
 -- Comboboxs
-local onion_hud_position = gui.Combobox(onion_window_groupbox_2, 'onion_hud_position', 'HUD Position', "Top Right", "Top Left", "Bottom Right", "Bottom Left")
+local onion_hud_position = gui.Combobox(onion_window_groupbox_2, 'onion_hud_position', 'HUD Position', "Draggable", "Top Right", "Top Left", "Bottom Right", "Bottom Left")
 local onion_hud_style = gui.Combobox(onion_window_groupbox_2, 'onion_hud_style', 'HUD Style', "Sypher", "Skeet", "Onetap")
 local onion_hud_side_style = gui.Combobox(onion_window_groupbox_3, 'onion_hud_side_style', 'Side HUD Style', "Sypher", "Skeet", "Onetap")
-local onion_crosshair_style = gui.Combobox(onion_window_groupbox_5, 'onion_crosshair_style', 'Crosshair Style', "Spread Line", "Spread Circle (Seizure Warning)", "Line", "Circle")
+local onion_crosshair_style = gui.Combobox(onion_window_groupbox_5, 'onion_crosshair_style', 'Crosshair Style', "Spread Line", "Spread Circle", "Line", "Circle")
 
 -- Color Pickers
 local onion_gradient_col_1 = gui.ColorPicker(onion_window_groupbox_1, 'onion_gradient_col_1', 'Gradient Color 1', 59, 175, 222, 255)
@@ -70,7 +73,7 @@ local onion_hud_options_velocity = gui.Checkbox(onion_window_groupbox_2_groupbox
 local onion_hud_options_tickrate = gui.Checkbox(onion_window_groupbox_2_groupbox_1, 'onion_hud_options_tickrate', 'Tickrate', true)
 
 -- Side HUD Options
-local onion_window_groupbox_3_groupbox_1 = gui.Groupbox(onion_window_groupbox_3, 'Side HUD Components', 0, 360)
+local onion_window_groupbox_3_groupbox_1 = gui.Groupbox(onion_window_groupbox_3, 'Side HUD Components', 0, 400)
 local onion_hud_side_options_information = gui.Checkbox(onion_window_groupbox_3_groupbox_1, 'onion_hud_side_options_information', 'Information', true)
 local onion_hud_side_options_velocity = gui.Checkbox(onion_window_groupbox_3_groupbox_1, 'onion_hud_side_options_velocity', 'Velocity', true)
 local onion_hud_side_options_server = gui.Checkbox(onion_window_groupbox_3_groupbox_1, 'onion_hud_side_options_server', 'Server', true)
@@ -99,6 +102,10 @@ local playerResources
 local curTime = ""
 local map
 local tick
+local mouseState = "none"
+local mouseDownPosX, mouseDownPosY = 0, 0
+local mouseDown = "none"
+local waterX, waterY = 20, 20
 
 --
 -- Misc Functions
@@ -206,7 +213,6 @@ function drawTopHUD()
 
 	local hudPosition = onion_hud_position:GetValue()
 	local hudStyle = onion_hud_style:GetValue()
-	local x, y = 0, 0
 	local r, g, b, a = onion_hud_color_text:GetValue()
 	local borderR, borderG, borderB, borderA = onion_hud_color_bordercolor:GetValue()
 	local border2R, border2G, border2B, border2A = onion_hud_color_bordercolor2:GetValue()
@@ -256,49 +262,64 @@ function drawTopHUD()
 	
 	-- Set HUD Position
 	if (hudPosition == 0) then
-		if (onion_hud_position_dynamic:GetValue() == true) then
-			if (onion_gradient_enabled:GetValue() == true) then
-				y = y + onion_gradient_height:GetValue()
+		if (mouseState == "down") then
+			if (mouseDown == "none") then
+				if (mouseX >= waterX and mouseX <= (waterX + hudW) and mouseY >= waterY and mouseY <= (waterY + hudH)) then
+					mouseDown = "first"
+					mouseDownPosX, mouseDownPosY = mouseX - waterX, mouseY - waterY
+				end
 			end
+		else
+			mouseDown = "none"
 		end
-		
-		y = y + onion_hud_position_y:GetValue()
-		x = scrW - (onion_hud_position_x:GetValue() + hudW)
+	
+		if (mouseDown == "first") then
+			waterX, waterY = mouseX - mouseDownPosX, mouseY - mouseDownPosY
+		end
 	elseif (hudPosition == 1) then
 		if (onion_hud_position_dynamic:GetValue() == true) then
 			if (onion_gradient_enabled:GetValue() == true) then
-				y = y + onion_gradient_height:GetValue()
+				waterY = onion_gradient_height:GetValue()
+			end
+		end
+		
+		waterY = waterY + onion_hud_position_y:GetValue()
+		waterX = scrW - (onion_hud_position_x:GetValue() + hudW)
+	elseif (hudPosition == 2) then
+		if (onion_hud_position_dynamic:GetValue() == true) then
+			if (onion_gradient_enabled:GetValue() == true) then
+				waterY = onion_gradient_height:GetValue()
 			end
 		end	
 		
-		y = y + onion_hud_position_y:GetValue()
-		x = onion_hud_position_x:GetValue()
-	elseif (hudPosition == 3) then
-		y = ((scrH - hudH) - onion_hud_position_y:GetValue())
-		x = onion_hud_position_x:GetValue()
+		waterY = waterY + onion_hud_position_y:GetValue()
+		waterX = onion_hud_position_x:GetValue()
+	elseif (hudPosition == 4) then
+		waterY = ((scrH - hudH) - onion_hud_position_y:GetValue())
+		waterX = onion_hud_position_x:GetValue()
 	else
-		y = ((scrH - hudH) - onion_hud_position_y:GetValue())
-		x = scrW - (onion_hud_position_x:GetValue() + hudW)
+		waterY = ((scrH - hudH) - onion_hud_position_y:GetValue())
+		waterX = scrW - (onion_hud_position_x:GetValue() + hudW)
 	end
 	
 	
 	-- Draw the HUD
 	if (hudStyle == 0) then
-		drawFilledRect(borderR, borderG, borderB, borderA, x, y, hudW, 2)
-		drawFilledRect(50, 50, 50, 185, x, y + 2, hudW, hudH - 2)
-		drawCenteredText(r, g, b, a, x + (hudW / 2), (y + 1) + ((hudH - 2) / 2), textFont, hudString)
+		drawFilledRect(borderR, borderG, borderB, borderA, waterX, waterY, hudW, 2)
+		drawFilledRect(50, 50, 50, 185, waterX, waterY + 2, hudW, hudH - 2)
+		drawCenteredText(r, g, b, a, waterX + (hudW / 2), (waterY + 1) + ((hudH - 2) / 2), textFont, hudString)
 	elseif (hudStyle == 1) then
-		drawFilledRect(10, 10, 10, 255, x, y, hudW, hudH)
-		drawFilledRect(60, 60, 60, 255, x + 1, y + 1, hudW - 2, hudH - 2)
-		drawFilledRect(40, 40, 40, 255, x + 2, y + 2, hudW - 4, hudH - 4)
-		drawFilledRect(10, 10, 10, 255, x + 5, y + 5, hudW - 10, hudH - 10)
-		drawFilledRect(17, 17, 17, 255, x + 6, y + 6, hudW - 12, hudH - 12)
-		drawCenteredText(r, g, b, a, x + (hudW / 2), (y + (hudH / 2)) - 1, textFont, hudString)
+		drawFilledRect(10, 10, 10, 255, waterX, waterY, hudW, hudH)
+		drawFilledRect(60, 60, 60, 255, waterX + 1, waterY + 1, hudW - 2, hudH - 2)
+		drawFilledRect(40, 40, 40, 255, waterX + 2, waterY + 2, hudW - 4, hudH - 4)
+		drawFilledRect(10, 10, 10, 255, waterX + 5, waterY + 5, hudW - 10, hudH - 10)
+		drawFilledRect(17, 17, 17, 255, waterX + 6, waterY + 6, hudW - 12, hudH - 12)
+		drawCenteredText(r, g, b, a, waterX + (hudW / 2), (waterY + (hudH / 2)) - 1, textFont, hudString)
 	else
-		drawGradient({border2R, border2G, border2B, border2A}, {borderR, borderG, borderB, borderA}, x, y, hudW / 2, 2)
-		drawGradient({borderR, borderG, borderB, borderA}, {border2R, border2G, border2B, border2A}, x + (hudW / 2), y, hudW / 2, 2)
-		drawFilledRect(10, 10, 10, 125, x, y + 2, hudW, hudH - 2)
-		drawCenteredText(r, g, b, a, x + (hudW / 2), (y + 1) + ((hudH - 2) / 2), textFont, hudString)
+		drawGradient({border2R, border2G, border2B, border2A}, {borderR, borderG, borderB, borderA}, waterX, waterY, hudW / 2, 2)
+		drawGradient({borderR, borderG, borderB, borderA}, {border2R, border2G, border2B, border2A}, waterX + (hudW / 2), waterY, hudW / 2, 2)
+		drawFilledRect(10, 10, 10, 125, waterX, waterY + 2, hudW, hudH - 2)
+		drawCenteredText(r, g, b, a, waterX + (hudW / 2), (waterY + 1) + ((hudH - 2) / 2), textFont, hudString)
 	end
 end
 
@@ -428,10 +449,18 @@ function drawCrosshair()
 	local r, g, b, a = onion_crosshair_color:GetValue()
 
 	if (crosshairStyle == 0) then -- Sypher
+		if (curVelocity >= onion_crosshair_enabled_velocity_max:GetValue() and onion_crosshair_enabled_velocity:GetValue()) then
+			return;
+		end
+
 		lineWidth = onion_crosshair_line_width:GetValue()
 		drawFilledRect(r, g, b, a, (scrW / 2) - (inaccuracy / 2), (scrH / 2) - (lineWidth / 2), inaccuracy, lineWidth)
 		drawFilledRect(r, g, b, a, (scrW / 2) - (lineWidth / 2), (scrH / 2) - (inaccuracy / 2), lineWidth, inaccuracy)
 	elseif (crosshairStyle == 1) then
+		if (curVelocity >= onion_crosshair_enabled_velocity_max:GetValue() and onion_crosshair_enabled_velocity:GetValue()) then
+			return;
+		end
+
 		draw.Color(r, g, b, a)
 		draw.FilledCircle(scrW / 2, scrH / 2, inaccuracy)
 	elseif (crosshairStyle == 2) then
@@ -447,7 +476,7 @@ function drawCrosshair()
 end
 
 --
--- Drawing Functions
+-- Callback Functions
 --
 
 function gatherVariables()
@@ -460,6 +489,21 @@ function gatherVariables()
 	localPlayer = entities.GetLocalPlayer()
 	playerResources = entities.GetPlayerResources()
 	-- curTime = os.clock()
+
+    if (input.IsButtonDown("Mouse1")) then
+        mouseState = "down"
+        if (mouseDownPosX == 0 and mouseDownPosY == 0) then
+            mouseDownPosX, mouseDownPosY = mousePosX, mousePosY
+        end
+    elseif (input.IsButtonReleased("Mouse1")) then
+        mouseState = "released"
+        mouseDownPosX, mouseDownPosY = 0, 0
+        mouseDown = false
+    else
+        mouseState = "none"
+        mouseDownPosX, mouseDownPosY = 0, 0
+        mouseDown = false
+    end
 	
 	if (onion_hud_enabled:GetValue() == true) then
 		if (localPlayer ~= nil) then
