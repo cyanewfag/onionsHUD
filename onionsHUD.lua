@@ -8,7 +8,7 @@
 --
 
 -- Window
-local onion_window = gui.Tab(gui.Reference("Settings"), 'onion_window_hud', "Onion's HUD")
+local onion_window = gui.Tab(gui.Reference("Menu", "Settings"), 'onion_window_hud', "Onion's HUD")
 
 -- Groupboxes
 local onion_window_groupbox_1 = gui.Groupbox(onion_window, 'Gradient Settings', 15, 15)
